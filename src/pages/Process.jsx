@@ -39,8 +39,8 @@ const steps = [
 ];
 
 const delivery = [
-  { t: 'Cattery Pickup', d: 'Visit us in Portland, meet the parents, and drive home with your kitten.', tag: 'Free' },
-  { t: 'Ground Delivery', d: 'Personal climate-controlled car delivery within 500 miles of Portland.', tag: 'From $250' },
+  { t: 'Cattery Pickup', d: 'Visit us in Chicago, meet the parents, and drive home with your kitten.', tag: 'Free' },
+  { t: 'Ground Delivery', d: 'Personal climate-controlled car delivery within 500 miles of Chicago.', tag: 'From $250' },
   { t: 'Flight Nanny', d: 'A professional courier flies with your kitten in-cabin to your nearest major airport.', tag: 'From $550' },
 ];
 

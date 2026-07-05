@@ -21,7 +21,7 @@ export default function About() {
       <PageHero
         eyebrow="About Velvet Crown"
         title="Twelve years of gentle giants"
-        text="We are a small, family-run, TICA-registered Maine Coon cattery in Portland, Oregon — and every cat here is family first."
+        text="We are a small, family-run, TICA-registered Maine Coon cattery in Chicago, Illinois — and every cat here is family first."
       />
 
       <section className="section">

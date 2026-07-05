@@ -1213,6 +1213,51 @@ h4 {
   color: var(--gold-pale);
 }
 
+/* ---------- WhatsApp floating button ---------- */
+.whatsapp-fab {
+  position: fixed;
+  left: 22px;
+  bottom: 22px;
+  z-index: 90;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: #25d366;
+  color: #ffffff;
+  box-shadow: 0 10px 28px rgba(18, 140, 76, 0.45);
+}
+.whatsapp-fab::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: #25d366;
+  opacity: 0.45;
+  z-index: -1;
+  animation: whatsapp-ping 2.2s ease-out infinite;
+}
+@keyframes whatsapp-ping {
+  0% {
+    transform: scale(1);
+    opacity: 0.45;
+  }
+  70%,
+  100% {
+    transform: scale(1.55);
+    opacity: 0;
+  }
+}
+@media (max-width: 620px) {
+  .whatsapp-fab {
+    left: 14px;
+    bottom: 14px;
+    width: 52px;
+    height: 52px;
+  }
+}
+
 /* ---------- Cart & checkout ---------- */
 .nav__cart {
   position: relative;

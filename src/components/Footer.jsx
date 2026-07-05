@@ -42,17 +42,17 @@ export default function Footer() {
           <div>
             <h4>Get in Touch</h4>
             <ul>
-              <li><a href="tel:+15550137264">(555) 013-7264</a></li>
-              <li><a href="mailto:hello@velvetcrowncoons.com">hello@velvetcrowncoons.com</a></li>
-              <li>Willow Creek Lane, Portland, OR</li>
-              <li>Mon–Sat · 9am–6pm PT</li>
+              <li><a href="tel:+17168020416">+1 (716) 802-0416</a></li>
+              <li><a href="mailto:cozypawscatterymainecoon23@gmail.com">cozypawscatterymainecoon23@gmail.com</a></li>
+              <li>1234 W Madison St, Chicago, IL 60607, USA</li>
+              <li>Mon–Sat · 9am–6pm CT</li>
             </ul>
           </div>
         </div>
 
         <div className="footer__bottom">
           <span>© {new Date().getFullYear()} Velvet Crown Maine Coons. All rights reserved.</span>
-          <span>TICA Registered Cattery · Raised with love in Portland, Oregon</span>
+          <span>TICA Registered Cattery · Raised with love in Chicago, Illinois</span>
         </div>
       </div>
     </footer>

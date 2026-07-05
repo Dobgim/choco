@@ -8,7 +8,7 @@ import { CheckIcon, ShieldIcon } from '../components/icons.jsx';
 import { useCart } from '../context/CartContext.jsx';
 
 const deliveryOptions = [
-  { id: 'pickup', label: 'Cattery Pickup — Portland, OR', price: 0 },
+  { id: 'pickup', label: 'Cattery Pickup — Chicago, IL', price: 0 },
   { id: 'ground', label: 'Ground Delivery (within 500 miles)', price: 250 },
   { id: 'nanny', label: 'Flight Nanny (in-cabin, to your airport)', price: 550 },
 ];

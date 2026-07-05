@@ -53,28 +53,28 @@ export default function Contact() {
                 <PhoneIcon />
                 <div>
                   <b>Call or Text</b>
-                  <span><a href="tel:+15550137264">(555) 013-7264</a></span>
+                  <span><a href="tel:+17168020416">+1 (716) 802-0416</a></span>
                 </div>
               </div>
               <div className="contact-info__row">
                 <MailIcon />
                 <div>
                   <b>Email</b>
-                  <span><a href="mailto:hello@velvetcrowncoons.com">hello@velvetcrowncoons.com</a></span>
+                  <span><a href="mailto:cozypawscatterymainecoon23@gmail.com">cozypawscatterymainecoon23@gmail.com</a></span>
                 </div>
               </div>
               <div className="contact-info__row">
                 <ClockIcon />
                 <div>
                   <b>Hours</b>
-                  <span>Monday – Saturday · 9am – 6pm PT<br />Visits by appointment only</span>
+                  <span>Monday – Saturday · 9am – 6pm CT<br />Visits by appointment only</span>
                 </div>
               </div>
               <div className="contact-info__row">
                 <PinIcon />
                 <div>
                   <b>Location</b>
-                  <span>Willow Creek Lane, Portland, Oregon<br />Exact address shared with confirmed visits</span>
+                  <span>1234 W Madison St, Chicago, IL 60607, USA<br />Visits by appointment</span>
                 </div>
               </div>
             </div>

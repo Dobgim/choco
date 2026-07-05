@@ -50,7 +50,7 @@ export default function Cams() {
               <h3 style={{ fontSize: '1.5rem', marginBottom: 10 }}>Private access for reserved families</h3>
               <p style={{ color: 'var(--brown-soft)', maxWidth: 560, margin: '0 auto 24px' }}>
                 Cam credentials are shared once your deposit is placed. Streams run daily from
-                7am to 10pm PT, with recorded highlights posted weekly for night owls.
+                7am to 10pm CT, with recorded highlights posted weekly for night owls.
               </p>
               <Link to="/kittens" className="btn btn--gold">Reserve a Kitten for Access</Link>
             </div>
