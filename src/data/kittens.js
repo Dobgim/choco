@@ -1,4 +1,4 @@
-export const kittens = [
+﻿export const kittens = [
   {
     id: 'aurora',
     name: 'Aurora',
@@ -10,7 +10,7 @@ export const kittens = [
     palette: 'silver',
     img: 'silver.jpg',
     temperament: 'Gentle, curious, and endlessly affectionate. Aurora is the first to greet visitors and loves shoulder rides.',
-    parents: 'CH Silverbrook Orion × Velvet Crown Luna',
+    parents: 'CH Silverbrook Orion × Cozy Paws Cattery Luna',
     ready: 'Ready to go home at 12 weeks',
   },
   {
@@ -24,7 +24,7 @@ export const kittens = [
     palette: 'brown',
     img: 'tabby-cujo.jpg',
     temperament: 'A big-hearted gentle giant in the making. Maximus is confident, playful, and wonderful with children.',
-    parents: 'GC Timberline Ragnar × Velvet Crown Amber',
+    parents: 'GC Timberline Ragnar × Cozy Paws Cattery Amber',
     ready: 'Ready to go home at 12 weeks',
   },
   {
@@ -38,7 +38,7 @@ export const kittens = [
     palette: 'cream',
     img: 'white.jpg',
     temperament: 'Sweet, calm, and deeply people-oriented. Seraphina purrs the moment she is picked up.',
-    parents: 'CH Silverbrook Orion × Velvet Crown Willow',
+    parents: 'CH Silverbrook Orion × Cozy Paws Cattery Willow',
     ready: 'Ready to go home at 12 weeks',
   },
   {
@@ -52,7 +52,7 @@ export const kittens = [
     palette: 'smoke',
     img: 'atticus.jpg',
     temperament: 'Bold and adventurous with a dramatic smoke coat. Atlas adores interactive play and follows you room to room.',
-    parents: 'GC Timberline Ragnar × Velvet Crown Luna',
+    parents: 'GC Timberline Ragnar × Cozy Paws Cattery Luna',
     ready: 'Ready to go home now',
   },
   {
@@ -66,7 +66,7 @@ export const kittens = [
     palette: 'blue',
     img: 'bluesmoke.jpg',
     temperament: 'Clever and charming with classic tortie personality. Willa learns tricks quickly and loves puzzle feeders.',
-    parents: 'CH Northwind Casper × Velvet Crown Amber',
+    parents: 'CH Northwind Casper × Cozy Paws Cattery Amber',
     ready: 'Ready to go home at 12 weeks',
   },
   {
@@ -80,7 +80,7 @@ export const kittens = [
     palette: 'red',
     img: 'redkitten.jpg',
     temperament: 'A striking red boy with a lion-like mane coming in. Leo is laid-back, cuddly, and great with other pets.',
-    parents: 'CH Northwind Casper × Velvet Crown Willow',
+    parents: 'CH Northwind Casper × Cozy Paws Cattery Willow',
     ready: 'Ready to go home now',
   },
 ];
@@ -88,7 +88,7 @@ export const kittens = [
 export const adults = [
   {
     id: 'luna',
-    name: 'Velvet Crown Luna',
+    name: 'Cozy Paws Cattery Luna',
     role: 'Queen',
     color: 'Silver Shaded',
     palette: 'silver',
@@ -106,7 +106,7 @@ export const adults = [
   },
   {
     id: 'amber',
-    name: 'Velvet Crown Amber',
+    name: 'Cozy Paws Cattery Amber',
     role: 'Queen',
     color: 'Cream Tabby',
     palette: 'cream',

@@ -1,4 +1,4 @@
-# Velvet Crown Maine Coons
+﻿# Cozy Paws Cattery Maine Coon
 
 A premium, fully responsive Maine Coon cattery website built with **React + Vite**, **React Router**, and **Framer Motion**. Original branding, copy, and SVG illustrations — no copyrighted content from any reference site.
 

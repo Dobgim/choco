@@ -1,4 +1,4 @@
-import Page from '../components/Page.jsx';
+﻿import Page from '../components/Page.jsx';
 import PageHero from '../components/PageHero.jsx';
 import Reveal from '../components/Reveal.jsx';
 import SectionHead from '../components/SectionHead.jsx';
@@ -19,7 +19,7 @@ export default function About() {
   return (
     <Page title="About Us">
       <PageHero
-        eyebrow="About Velvet Crown"
+        eyebrow="About Cozy Paws Cattery"
         title="Twelve years of gentle giants"
         text="We are a small, family-run, TICA-registered Maine Coon cattery in Chicago, Illinois — and every cat here is family first."
       />
@@ -41,7 +41,7 @@ export default function About() {
               and health-testing discipline.
             </p>
             <p>
-              Today Velvet Crown pairs carefully selected European champion bloodlines with an
+              Today Cozy Paws Cattery pairs carefully selected European champion bloodlines with an
               obsessive focus on temperament. Our kittens are known for their size, their lynx
               tips and river-otter tails — and above all, for being confident, affectionate
               companions.

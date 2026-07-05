@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import Page from '../components/Page.jsx';
 import PageHero from '../components/PageHero.jsx';
 import Reveal from '../components/Reveal.jsx';
@@ -27,7 +27,7 @@ export default function Gallery() {
     <Page title="Gallery">
       <PageHero
         eyebrow="Gallery"
-        title="A portrait of life at Velvet Crown"
+        title="A portrait of life at Cozy Paws Cattery"
         text="Lynx tips, river-otter tails, and everyday moments from the cattery."
       />
 

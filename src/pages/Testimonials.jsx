@@ -1,4 +1,4 @@
-import Page from '../components/Page.jsx';
+﻿import Page from '../components/Page.jsx';
 import PageHero from '../components/PageHero.jsx';
 import Reveal from '../components/Reveal.jsx';
 import CtaBand from '../components/CtaBand.jsx';
@@ -46,7 +46,7 @@ export default function Testimonials() {
 
       <CtaBand
         title="Ready to write your own story?"
-        text="Join hundreds of families who found their gentle giant at Velvet Crown."
+        text="Join hundreds of families who found their gentle giant at Cozy Paws Cattery."
       />
     </Page>
   );

@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+﻿import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Page from '../components/Page.jsx';
 import Reveal from '../components/Reveal.jsx';
@@ -146,7 +146,7 @@ export default function Home() {
             <span className="eyebrow">Our Story</span>
             <h2>A small family cattery with a big heart</h2>
             <p>
-              Velvet Crown began twelve years ago with one extraordinary silver queen and a
+              Cozy Paws Cattery began twelve years ago with one extraordinary silver queen and a
               promise: to breed Maine Coons the right way — health first, temperament always,
               and never more litters than our home and hearts can hold.
             </p>

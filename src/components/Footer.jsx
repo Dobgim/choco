@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+﻿import { Link } from 'react-router-dom';
 import CrownLogo from './CrownLogo.jsx';
 
 export default function Footer() {
@@ -9,7 +9,7 @@ export default function Footer() {
           <div>
             <div className="footer__brand">
               <CrownLogo className="" />
-              Velvet Crown
+              Cozy Paws Cattery
             </div>
             <p>
               A small, family-run TICA-registered cattery devoted to raising healthy,
@@ -51,7 +51,7 @@ export default function Footer() {
         </div>
 
         <div className="footer__bottom">
-          <span>© {new Date().getFullYear()} Velvet Crown Maine Coons. All rights reserved.</span>
+          <span>© {new Date().getFullYear()} Cozy Paws Cattery Maine Coon. All rights reserved.</span>
           <span>TICA Registered Cattery · Raised with love in Chicago, Illinois</span>
         </div>
       </div>

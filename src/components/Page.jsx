@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+﻿import { useEffect } from 'react';
 import { motion } from 'framer-motion';
 
 /**
@@ -7,8 +7,8 @@ import { motion } from 'framer-motion';
 export default function Page({ title, children }) {
   useEffect(() => {
     document.title = title
-      ? `${title} | Velvet Crown Maine Coons`
-      : 'Velvet Crown Maine Coons | Premium Maine Coon Cattery';
+      ? `${title} | Cozy Paws Cattery Maine Coon`
+      : 'Cozy Paws Cattery Maine Coon | Premium Maine Coon Cattery';
   }, [title]);
 
   return (

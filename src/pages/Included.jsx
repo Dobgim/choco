@@ -1,4 +1,4 @@
-import Page from '../components/Page.jsx';
+﻿import Page from '../components/Page.jsx';
 import PageHero from '../components/PageHero.jsx';
 import Reveal from '../components/Reveal.jsx';
 import SectionHead from '../components/SectionHead.jsx';
@@ -48,7 +48,7 @@ const groups = [
     items: [
       'Direct line to us for your cat’s entire life',
       'Nutrition, grooming, and introduction guidance',
-      'Private alumni community of Velvet Crown families',
+      'Private alumni community of Cozy Paws Cattery families',
       'Rehoming-back promise: your cat always has a home with us',
     ],
   },

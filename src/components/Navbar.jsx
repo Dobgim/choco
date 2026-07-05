@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+﻿import { useEffect, useState } from 'react';
 import { NavLink, Link, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import CrownLogo from './CrownLogo.jsx';
@@ -44,10 +44,10 @@ export default function Navbar() {
       </a>
       <header className={`nav${scrolled || open ? ' nav--scrolled' : ''}`}>
         <div className="nav__inner">
-          <Link to="/" className="nav__brand" aria-label="Velvet Crown Maine Coons — home">
+          <Link to="/" className="nav__brand" aria-label="Cozy Paws Cattery Maine Coon — home">
             <CrownLogo />
             <span>
-              Velvet Crown
+              Cozy Paws Cattery
               <small>Maine Coons</small>
             </span>
           </Link>
