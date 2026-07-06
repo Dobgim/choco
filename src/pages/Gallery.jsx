@@ -4,6 +4,9 @@ import PageHero from '../components/PageHero.jsx';
 import Reveal from '../components/Reveal.jsx';
 import CatArt from '../components/CatArt.jsx';
 import CtaBand from '../components/CtaBand.jsx';
+import SectionHead from '../components/SectionHead.jsx';
+import VideoPlayer from '../components/VideoPlayer.jsx';
+import { useData } from '../context/DataContext.jsx';
 
 const shots = [
   { img: 'meowing.jpg', cap: 'Maximus surveying his kingdom', cat: 'Kittens' },
@@ -20,6 +23,7 @@ const shots = [
 const cats = ['All', 'Kittens', 'Queens & Sires', 'Our Home'];
 
 export default function Gallery() {
+  const { videos } = useData();
   const [filter, setFilter] = useState('All');
   const shown = filter === 'All' ? shots : shots.filter((s) => s.cat === filter);
 
@@ -61,6 +65,32 @@ export default function Gallery() {
           </div>
         </div>
       </section>
+
+      {videos.length > 0 && (
+        <section className="section section--tint">
+          <div className="container">
+            <SectionHead
+              center
+              eyebrow="Watch"
+              title="Videos from the cattery"
+              text="Little moments, big paws — clips straight from our nursery and play room."
+            />
+            <div className="video-grid">
+              {videos.map((v, i) => (
+                <Reveal key={v.id} delay={(i % 2) * 0.1}>
+                  <figure className="card video-card">
+                    <VideoPlayer video={v} />
+                    <figcaption>
+                      <b>{v.title}</b>
+                      {v.description && <p>{v.description}</p>}
+                    </figcaption>
+                  </figure>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       <CtaBand
         title="Want more photos and videos?"

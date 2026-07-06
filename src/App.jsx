@@ -25,6 +25,7 @@ import AdminDashboard from './admin/AdminDashboard.jsx';
 import AdminKittens from './admin/AdminKittens.jsx';
 import AdminOrders from './admin/AdminOrders.jsx';
 import AdminInquiries from './admin/AdminInquiries.jsx';
+import AdminVideos from './admin/AdminVideos.jsx';
 
 export default function App() {
   const location = useLocation();
@@ -57,6 +58,7 @@ export default function App() {
               <Route path="kittens" element={<AdminKittens />} />
               <Route path="orders" element={<AdminOrders />} />
               <Route path="inquiries" element={<AdminInquiries />} />
+              <Route path="videos" element={<AdminVideos />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>

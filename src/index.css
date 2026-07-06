@@ -1591,6 +1591,71 @@ h4 {
   color: var(--brown-soft);
 }
 
+/* ---------- Videos ---------- */
+.video-frame {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: none;
+  background: #1d1710;
+  object-fit: contain;
+}
+.video-frame--missing {
+  display: grid;
+  place-items: center;
+  color: #b8a988;
+  font-size: 0.9rem;
+}
+.video-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 26px;
+}
+@media (max-width: 780px) {
+  .video-grid {
+    grid-template-columns: 1fr;
+  }
+}
+.video-card figcaption {
+  padding: 18px 22px 22px;
+}
+.video-card figcaption b {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+}
+.video-card figcaption p {
+  color: var(--brown-soft);
+  font-size: 0.9rem;
+  margin-top: 4px;
+}
+
+.admin-video-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+}
+.admin-video {
+  padding: 0;
+  overflow: hidden;
+  margin-bottom: 0;
+}
+.admin-video__body {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 16px 18px;
+  font-size: 0.9rem;
+}
+.admin-video__body p {
+  color: var(--brown-soft);
+  font-size: 0.86rem;
+  margin: 4px 0;
+}
+.admin-form input[type='file'] {
+  padding: 9px 10px;
+}
+
 /* ---------- Admin ---------- */
 .admin-login {
   min-height: 100vh;

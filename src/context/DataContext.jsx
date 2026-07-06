@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { kittens as seedKittens } from '../data/kittens.js';
+import { deleteVideoBlob } from '../lib/videoStore.js';
 
 const DataContext = createContext(null);
 
@@ -27,12 +28,14 @@ export function DataProvider({ children }) {
   const [kittens, setKittens] = usePersistent('vc-kittens', seedKittens);
   const [orders, setOrders] = usePersistent('vc-orders', []);
   const [inquiries, setInquiries] = usePersistent('vc-inquiries', []);
+  const [videos, setVideos] = usePersistent('vc-videos', []);
 
   const value = useMemo(
     () => ({
       kittens,
       orders,
       inquiries,
+      videos,
 
       addKitten: (k) => {
         const id = `${k.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${Date.now().toString(36)}`;
@@ -63,8 +66,25 @@ export function DataProvider({ children }) {
       updateInquiry: (id, patch) =>
         setInquiries((prev) => prev.map((q) => (q.id === id ? { ...q, ...patch } : q))),
       deleteInquiry: (id) => setInquiries((prev) => prev.filter((q) => q.id !== id)),
+
+      addVideo: (video) => {
+        const id = `VID-${Date.now().toString(36)}`;
+        setVideos((prev) => [{ ...video, id, date: new Date().toISOString() }, ...prev]);
+        return id;
+      },
+      updateVideo: (id, patch) =>
+        setVideos((prev) => prev.map((v) => (v.id === id ? { ...v, ...patch } : v))),
+      deleteVideo: (id) => {
+        setVideos((prev) => {
+          const target = prev.find((v) => v.id === id);
+          if (target?.type === 'file' && target.fileId) {
+            deleteVideoBlob(target.fileId).catch(() => {});
+          }
+          return prev.filter((v) => v.id !== id);
+        });
+      },
     }),
-    [kittens, orders, inquiries]
+    [kittens, orders, inquiries, videos]
   );
 
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;

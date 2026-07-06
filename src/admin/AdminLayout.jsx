@@ -42,6 +42,9 @@ export default function AdminLayout() {
           <NavLink to="/admin/inquiries" className={linkClass}>
             Inquiries {openInquiries > 0 && <span className="admin-nav__badge">{openInquiries}</span>}
           </NavLink>
+          <NavLink to="/admin/videos" className={linkClass}>
+            Videos
+          </NavLink>
         </nav>
         <div className="admin__sidebar-footer">
           <Link to="/" className="admin-nav__link">
