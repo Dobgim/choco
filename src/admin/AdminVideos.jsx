@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import VideoPlayer from '../components/VideoPlayer.jsx';
 import { putVideoBlob } from '../lib/videoStore.js';
+import { supabase, VIDEO_BUCKET } from '../lib/supabase.js';
 import { useData } from '../context/DataContext.jsx';
 
 const MAX_MB = 200;
@@ -44,15 +45,34 @@ export default function AdminVideos() {
           return;
         }
         setBusy(true);
-        const fileId = `blob-${Date.now().toString(36)}`;
-        await putVideoBlob(fileId, file);
-        addVideo({
-          title: title.trim() || file.name,
-          description: description.trim(),
-          type: 'file',
-          fileId,
-          size: file.size,
-        });
+        if (supabase) {
+          // Supabase Storage: the video is hosted publicly for all visitors.
+          const ext = file.name.split('.').pop()?.toLowerCase() || 'mp4';
+          const path = `clip-${Date.now().toString(36)}.${ext}`;
+          const { error: upErr } = await supabase.storage
+            .from(VIDEO_BUCKET)
+            .upload(path, file, { contentType: file.type });
+          if (upErr) throw upErr;
+          const { data: pub } = supabase.storage.from(VIDEO_BUCKET).getPublicUrl(path);
+          addVideo({
+            title: title.trim() || file.name,
+            description: description.trim(),
+            type: 'url',
+            url: pub.publicUrl,
+            storagePath: path,
+            size: file.size,
+          });
+        } else {
+          const fileId = `blob-${Date.now().toString(36)}`;
+          await putVideoBlob(fileId, file);
+          addVideo({
+            title: title.trim() || file.name,
+            description: description.trim(),
+            type: 'file',
+            fileId,
+            size: file.size,
+          });
+        }
         setOk(`Uploaded "${title.trim() || file.name}".`);
       } else {
         addVideo({
