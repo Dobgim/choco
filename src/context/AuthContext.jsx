@@ -3,7 +3,7 @@ import { createContext, useContext, useMemo, useState } from 'react';
 // Front-end-only credentials for the demo admin area. For real
 // production security, replace with a proper backend auth service.
 const ADMIN_USERNAME = 'admin';
-const ADMIN_PASSWORD = 'VelvetAdmin@2026';
+const ADMIN_PASSWORD = 'CozyPaws@2026';
 const SESSION_KEY = 'vc-admin-session';
 
 const AuthContext = createContext(null);

@@ -9,7 +9,7 @@ import Accordion from '../components/Accordion.jsx';
 import Counter from '../components/Counter.jsx';
 import { FeatureIcon } from '../components/icons.jsx';
 import CtaBand from '../components/CtaBand.jsx';
-import { kittens } from '../data/kittens.js';
+import { useData } from '../context/DataContext.jsx';
 import { testimonials } from '../data/testimonials.js';
 import { faqs } from '../data/faqs.js';
 
@@ -37,6 +37,7 @@ const included = [
 ];
 
 export default function Home() {
+  const { kittens } = useData();
   const featured = kittens.filter((k) => k.status === 'Available').slice(0, 3);
 
   return (

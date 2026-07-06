@@ -4,11 +4,12 @@ import PageHero from '../components/PageHero.jsx';
 import Reveal from '../components/Reveal.jsx';
 import KittenCard from '../components/KittenCard.jsx';
 import CtaBand from '../components/CtaBand.jsx';
-import { kittens } from '../data/kittens.js';
+import { useData } from '../context/DataContext.jsx';
 
 const filters = ['All', 'Available', 'Reserved'];
 
 export default function Kittens() {
+  const { kittens } = useData();
   const [filter, setFilter] = useState('All');
   const shown = filter === 'All' ? kittens : kittens.filter((k) => k.status === filter);
 

@@ -19,14 +19,21 @@ import Contact from './pages/Contact.jsx';
 import Cart from './pages/Cart.jsx';
 import Checkout from './pages/Checkout.jsx';
 import NotFound from './pages/NotFound.jsx';
+import AdminLogin from './admin/AdminLogin.jsx';
+import AdminLayout from './admin/AdminLayout.jsx';
+import AdminDashboard from './admin/AdminDashboard.jsx';
+import AdminKittens from './admin/AdminKittens.jsx';
+import AdminOrders from './admin/AdminOrders.jsx';
+import AdminInquiries from './admin/AdminInquiries.jsx';
 
 export default function App() {
   const location = useLocation();
+  const isAdmin = location.pathname.startsWith('/admin');
 
   return (
     <div className="site">
       <ScrollToTop />
-      <Navbar />
+      {!isAdmin && <Navbar />}
       <main id="main-content">
         <AnimatePresence mode="wait" initial={false}>
           <Routes location={location} key={location.pathname}>
@@ -44,12 +51,19 @@ export default function App() {
             <Route path="/contact" element={<Contact />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/checkout" element={<Checkout />} />
+            <Route path="/admin/login" element={<AdminLogin />} />
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route index element={<AdminDashboard />} />
+              <Route path="kittens" element={<AdminKittens />} />
+              <Route path="orders" element={<AdminOrders />} />
+              <Route path="inquiries" element={<AdminInquiries />} />
+            </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AnimatePresence>
       </main>
-      <Footer />
-      <WhatsAppButton />
+      {!isAdmin && <Footer />}
+      {!isAdmin && <WhatsAppButton />}
     </div>
   );
 }

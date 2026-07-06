@@ -5,10 +5,11 @@ import Page from '../components/Page.jsx';
 import Reveal from '../components/Reveal.jsx';
 import CatArt from '../components/CatArt.jsx';
 import KittenCard from '../components/KittenCard.jsx';
-import { kittens } from '../data/kittens.js';
+import { useData } from '../context/DataContext.jsx';
 
 export default function KittenDetail() {
   const { id } = useParams();
+  const { kittens } = useData();
   const kitten = kittens.find((k) => k.id === id);
   const { add, inCart } = useCart();
   const navigate = useNavigate();

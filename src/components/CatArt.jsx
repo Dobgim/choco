@@ -13,5 +13,6 @@ const fallbackByPalette = {
 
 export default function CatArt({ img, palette = 'brown', label = 'Maine Coon cat' }) {
   const file = img || fallbackByPalette[palette] || fallbackByPalette.brown;
-  return <img className="catart" src={`/images/cats/${file}`} alt={label} loading="lazy" />;
+  const src = /^https?:\/\//.test(file) ? file : `/images/cats/${file}`;
+  return <img className="catart" src={src} alt={label} loading="lazy" />;
 }

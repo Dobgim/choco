@@ -6,6 +6,7 @@ import Reveal from '../components/Reveal.jsx';
 import CatArt from '../components/CatArt.jsx';
 import { CheckIcon, ShieldIcon } from '../components/icons.jsx';
 import { useCart } from '../context/CartContext.jsx';
+import { useData } from '../context/DataContext.jsx';
 
 const deliveryOptions = [
   { id: 'pickup', label: 'Cattery Pickup — Chicago, IL', price: 0 },
@@ -15,6 +16,7 @@ const deliveryOptions = [
 
 export default function Checkout() {
   const { items, subtotal, clear } = useCart();
+  const { addOrder, updateKitten } = useData();
   const [delivery, setDelivery] = useState('pickup');
   const [payMode, setPayMode] = useState('deposit');
   const [placed, setPlaced] = useState(null);
@@ -29,12 +31,36 @@ export default function Checkout() {
   const onSubmit = (e) => {
     e.preventDefault();
     const data = new FormData(e.target);
+    const name = `${data.get('firstName')} ${data.get('lastName')}`;
+    const deliveryOpt = deliveryOptions.find((d) => d.id === delivery);
+
+    const orderId = addOrder({
+      customer: {
+        name,
+        email: data.get('email'),
+        phone: data.get('phone'),
+        address: data.get('address'),
+      },
+      items: items.map((k) => ({ id: k.id, name: k.name, price: k.price })),
+      delivery,
+      deliveryLabel: deliveryOpt?.label,
+      deliveryPrice,
+      payMode,
+      subtotal,
+      total,
+      dueToday,
+      notes: data.get('notes'),
+    });
+
+    // A reservation takes the kitten off the market immediately.
+    items.forEach((k) => updateKitten(k.id, { status: 'Reserved' }));
+
     setPlaced({
-      name: `${data.get('firstName')} ${data.get('lastName')}`,
+      name,
       email: data.get('email'),
       kittens: items.map((k) => k.name).join(', '),
       dueToday,
-      orderId: `VC-${Date.now().toString().slice(-6)}`,
+      orderId,
     });
     clear();
     window.scrollTo({ top: 0, behavior: 'instant' });

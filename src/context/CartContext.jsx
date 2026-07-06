@@ -1,10 +1,11 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
-import { kittens } from '../data/kittens.js';
+import { useData } from './DataContext.jsx';
 
 const CartContext = createContext(null);
 const STORAGE_KEY = 'vc-cart';
 
 export function CartProvider({ children }) {
+  const { kittens } = useData();
   const [ids, setIds] = useState(() => {
     try {
       const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
@@ -19,7 +20,8 @@ export function CartProvider({ children }) {
   }, [ids]);
 
   const value = useMemo(() => {
-    // Each kitten is one-of-a-kind, so the cart holds unique ids (no quantities).
+    // Each kitten is one-of-a-kind, so the cart holds unique ids (no
+    // quantities). Kittens deleted by the admin drop out automatically.
     const items = ids
       .map((id) => kittens.find((k) => k.id === id))
       .filter(Boolean);
@@ -34,7 +36,7 @@ export function CartProvider({ children }) {
       remove: (id) => setIds((prev) => prev.filter((x) => x !== id)),
       clear: () => setIds([]),
     };
-  }, [ids]);
+  }, [ids, kittens]);
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }

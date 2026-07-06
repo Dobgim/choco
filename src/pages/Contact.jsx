@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Page from '../components/Page.jsx';
 import PageHero from '../components/PageHero.jsx';
 import Reveal from '../components/Reveal.jsx';
-import { kittens } from '../data/kittens.js';
+import { useData } from '../context/DataContext.jsx';
 
 const PinIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
@@ -29,10 +29,21 @@ const ClockIcon = () => (
 );
 
 export default function Contact() {
+  const { kittens, addInquiry } = useData();
   const [sent, setSent] = useState(false);
 
   const onSubmit = (e) => {
     e.preventDefault();
+    const data = new FormData(e.target);
+    const interestId = data.get('interest');
+    const kitten = kittens.find((k) => k.id === interestId);
+    addInquiry({
+      name: `${data.get('firstName')} ${data.get('lastName')}`,
+      email: data.get('email'),
+      phone: data.get('phone'),
+      interest: kitten ? `${kitten.name} (${kitten.color} ${kitten.sex})` : interestId || 'General',
+      message: data.get('message'),
+    });
     setSent(true);
     e.target.reset();
   };
