@@ -1,4 +1,5 @@
 import { useData } from '../context/DataContext.jsx';
+import ConfirmDelete from './ConfirmDelete.jsx';
 
 const fmtDate = (iso) =>
   new Date(iso).toLocaleString('en-US', {
@@ -7,10 +8,6 @@ const fmtDate = (iso) =>
 
 export default function AdminInquiries() {
   const { inquiries, updateInquiry, deleteInquiry } = useData();
-
-  const onDelete = (q) => {
-    if (window.confirm(`Delete the inquiry from ${q.name}?`)) deleteInquiry(q.id);
-  };
 
   return (
     <div>
@@ -43,9 +40,7 @@ export default function AdminInquiries() {
                 >
                   Mark {q.handled ? 'Open' : 'Handled'}
                 </button>
-                <button className="admin-link admin-link--danger" onClick={() => onDelete(q)}>
-                  Delete
-                </button>
+                <ConfirmDelete onConfirm={() => deleteInquiry(q.id)} />
               </div>
             </header>
             <p className="admin-inquiry__meta">

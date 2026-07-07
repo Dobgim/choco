@@ -1,83 +1,123 @@
 import { useEffect, useRef, useState } from 'react';
 import CatArt from '../components/CatArt.jsx';
-import { uploadImage } from '../lib/imageUpload.js';
+import { uploadImage, uploadVideoFile } from '../lib/imageUpload.js';
 import { useData } from '../context/DataContext.jsx';
+import ConfirmDelete from './ConfirmDelete.jsx';
 
 const emptyForm = {
   name: '', sex: 'Female', color: '', age: '', price: 2500, status: 'Available',
-  img: 'hero.jpg', temperament: '', parents: '', ready: 'Ready to go home at 12 weeks',
+  img: 'hero.jpg', photos: [], video: null,
+  temperament: '', parents: '', ready: 'Ready to go home at 12 weeks',
 };
 
 export default function AdminKittens() {
   const { kittens, addKitten, updateKitten, deleteKitten } = useData();
   const [editingId, setEditingId] = useState(null); // null = closed, 'new' = adding
   const [form, setForm] = useState(emptyForm);
-  const [photoFile, setPhotoFile] = useState(null);
-  const [photoPreview, setPhotoPreview] = useState(null);
+  const [pending, setPending] = useState([]); // new photos: [{ file, preview }]
+  const [videoFile, setVideoFile] = useState(null);
+  const [removeVideo, setRemoveVideo] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const fileRef = useRef(null);
+  const videoRef = useRef(null);
 
-  useEffect(() => {
-    // Free the temporary preview URL when it's replaced or unmounted.
-    return () => {
-      if (photoPreview) URL.revokeObjectURL(photoPreview);
-    };
-  }, [photoPreview]);
+  // Revoke leftover preview URLs when the page unmounts.
+  const pendingRef = useRef(pending);
+  pendingRef.current = pending;
+  useEffect(
+    () => () => pendingRef.current.forEach((p) => URL.revokeObjectURL(p.preview)),
+    []
+  );
 
-  const resetPhoto = () => {
-    setPhotoFile(null);
-    setPhotoPreview(null);
+  const resetMedia = () => {
+    setPending((prev) => {
+      prev.forEach((p) => URL.revokeObjectURL(p.preview));
+      return [];
+    });
+    setVideoFile(null);
+    setRemoveVideo(false);
     if (fileRef.current) fileRef.current.value = '';
+    if (videoRef.current) videoRef.current.value = '';
   };
   const openNew = () => {
     setForm(emptyForm);
-    resetPhoto();
+    resetMedia();
     setError('');
     setEditingId('new');
   };
   const openEdit = (k) => {
-    setForm({ ...emptyForm, ...k });
-    resetPhoto();
+    // Older records only have a cover `img`; surface it in the photo grid.
+    const photos = k.photos?.length ? k.photos : k.img ? [k.img] : [];
+    setForm({ ...emptyForm, ...k, photos });
+    resetMedia();
     setError('');
     setEditingId(k.id);
   };
   const close = () => {
-    resetPhoto();
+    resetMedia();
     setEditingId(null);
   };
   const set = (key) => (e) => setForm((f) => ({ ...f, [key]: e.target.value }));
 
-  const onPickPhoto = (e) => {
+  const onPickPhotos = (e) => {
+    const files = Array.from(e.target.files || []).filter((f) => f.type.startsWith('image/'));
+    if (files.length) {
+      setPending((prev) => [
+        ...prev,
+        ...files.map((file) => ({ file, preview: URL.createObjectURL(file) })),
+      ]);
+      setError('');
+    }
+    e.target.value = '';
+  };
+  const removePendingPhoto = (i) =>
+    setPending((prev) => {
+      URL.revokeObjectURL(prev[i].preview);
+      return prev.filter((_, x) => x !== i);
+    });
+  const removeExistingPhoto = (url) =>
+    setForm((f) => ({ ...f, photos: (f.photos || []).filter((p) => p !== url) }));
+
+  const onPickVideo = (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    setPhotoFile(file);
-    setPhotoPreview(URL.createObjectURL(file));
+    if (!file.type.startsWith('video/')) {
+      setError('That file is not a video.');
+      return;
+    }
+    setVideoFile(file);
+    setRemoveVideo(false);
     setError('');
+  };
+  const clearVideo = () => {
+    setVideoFile(null);
+    setRemoveVideo(true);
+    if (videoRef.current) videoRef.current.value = '';
   };
 
   const onSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setBusy(true);
     try {
-      let img = form.img;
-      if (photoFile) {
-        setBusy(true);
-        img = await uploadImage(photoFile);
-      }
-      const payload = { ...form, img, price: Number(form.price) || 0 };
+      const uploaded = [];
+      for (const p of pending) uploaded.push(await uploadImage(p.file));
+      const photos = [...(form.photos || []), ...uploaded];
+      const img = photos[0] || form.img;
+
+      let video = removeVideo ? null : form.video || null;
+      if (videoFile) video = await uploadVideoFile(videoFile);
+
+      const payload = { ...form, photos, img, video, price: Number(form.price) || 0 };
       if (editingId === 'new') addKitten(payload);
       else updateKitten(editingId, payload);
       close();
     } catch (err) {
-      setError(`Photo upload failed: ${err?.message || 'unknown error'}`);
+      setError(`Upload failed: ${err?.message || 'unknown error'}`);
     } finally {
       setBusy(false);
     }
-  };
-
-  const onDelete = (k) => {
-    if (window.confirm(`Delete ${k.name}? This cannot be undone.`)) deleteKitten(k.id);
   };
 
   return (
@@ -139,49 +179,69 @@ export default function AdminKittens() {
             <textarea value={form.temperament} onChange={set('temperament')} rows="3" />
           </label>
           {error && <p className="admin-login__error" role="alert">{error}</p>}
-          <div className="admin-form__preview admin-photo-picker">
-            <div className="admin-form__thumb admin-photo-picker__thumb">
-              {photoPreview ? (
-                <img src={photoPreview} alt="New photo preview" />
-              ) : (
-                <CatArt img={form.img} label="Current photo" />
-              )}
+
+          <div className="admin-media">
+            <span className="admin-media__label">Photos — the first one is the cover</span>
+            <div className="admin-photo-grid">
+              {(form.photos || []).map((url) => (
+                <div className="admin-photo-grid__item" key={url}>
+                  <CatArt img={url} label="Kitten photo" />
+                  <button type="button" aria-label="Remove photo" onClick={() => removeExistingPhoto(url)}>
+                    ×
+                  </button>
+                </div>
+              ))}
+              {pending.map((p, i) => (
+                <div className="admin-photo-grid__item admin-photo-grid__item--new" key={p.preview}>
+                  <img src={p.preview} alt="New photo preview" />
+                  <button type="button" aria-label="Remove photo" onClick={() => removePendingPhoto(i)}>
+                    ×
+                  </button>
+                </div>
+              ))}
+              <button
+                type="button"
+                className="admin-photo-grid__add"
+                onClick={() => fileRef.current?.click()}
+              >
+                + Add Photos
+              </button>
             </div>
-            <div className="admin-photo-picker__controls">
-              <span>{photoPreview ? 'New photo selected' : editingId === 'new' ? 'Add a photo' : 'Current photo'}</span>
-              <input
-                ref={fileRef}
-                id="kitten-photo-input"
-                type="file"
-                accept="image/*"
-                onChange={onPickPhoto}
-                hidden
-              />
-              <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+            <input ref={fileRef} type="file" accept="image/*" multiple hidden onChange={onPickPhotos} />
+
+            <span className="admin-media__label">Video (optional)</span>
+            <div className="admin-media__video">
+              <span className="admin-media__file">
+                {videoFile
+                  ? `New video: ${videoFile.name}`
+                  : form.video && !removeVideo
+                    ? 'Video attached'
+                    : 'No video'}
+              </span>
+              <button
+                type="button"
+                className="btn btn--outline"
+                style={{ padding: '9px 18px', fontSize: '0.74rem' }}
+                onClick={() => videoRef.current?.click()}
+              >
+                {videoFile || (form.video && !removeVideo) ? 'Replace Video' : 'Upload Video'}
+              </button>
+              {(videoFile || (form.video && !removeVideo)) && (
                 <button
                   type="button"
                   className="btn btn--outline"
-                  style={{ padding: '10px 20px', fontSize: '0.76rem' }}
-                  onClick={() => fileRef.current?.click()}
+                  style={{ padding: '9px 18px', fontSize: '0.74rem' }}
+                  onClick={clearVideo}
                 >
-                  {photoPreview ? 'Choose a Different Photo' : 'Upload Photo'}
+                  Remove Video
                 </button>
-                {photoPreview && (
-                  <button
-                    type="button"
-                    className="btn btn--outline"
-                    style={{ padding: '10px 20px', fontSize: '0.76rem' }}
-                    onClick={resetPhoto}
-                  >
-                    Keep Previous Photo
-                  </button>
-                )}
-              </div>
+              )}
             </div>
+            <input ref={videoRef} type="file" accept="video/*" hidden onChange={onPickVideo} />
           </div>
           <div style={{ display: 'flex', gap: 12 }}>
             <button type="submit" className="btn btn--gold" disabled={busy}>
-              {busy ? 'Uploading photo…' : editingId === 'new' ? 'Add Kitten' : 'Save Changes'}
+              {busy ? 'Uploading…' : editingId === 'new' ? 'Add Kitten' : 'Save Changes'}
             </button>
             <button type="button" className="btn btn--outline" onClick={close} disabled={busy}>
               Cancel
@@ -225,7 +285,7 @@ export default function AdminKittens() {
                 <td>
                   <div className="admin-actions">
                     <button className="admin-link" onClick={() => openEdit(k)}>Edit</button>
-                    <button className="admin-link admin-link--danger" onClick={() => onDelete(k)}>Delete</button>
+                    <ConfirmDelete onConfirm={() => deleteKitten(k.id)} />
                   </div>
                 </td>
               </tr>

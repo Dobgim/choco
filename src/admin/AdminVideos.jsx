@@ -3,6 +3,7 @@ import VideoPlayer from '../components/VideoPlayer.jsx';
 import { putVideoBlob } from '../lib/videoStore.js';
 import { supabase, VIDEO_BUCKET } from '../lib/supabase.js';
 import { useData } from '../context/DataContext.jsx';
+import ConfirmDelete from './ConfirmDelete.jsx';
 
 const MAX_MB = 200;
 
@@ -91,10 +92,6 @@ export default function AdminVideos() {
     }
   };
 
-  const onDelete = (v) => {
-    if (window.confirm(`Delete "${v.title}"?`)) deleteVideo(v.id);
-  };
-
   return (
     <div>
       <header className="admin-head">
@@ -158,9 +155,7 @@ export default function AdminVideos() {
                       : ' · linked'}
                   </span>
                 </div>
-                <button className="admin-link admin-link--danger" onClick={() => onDelete(v)}>
-                  Delete
-                </button>
+                <ConfirmDelete onConfirm={() => deleteVideo(v.id)} />
               </div>
             </article>
           ))}

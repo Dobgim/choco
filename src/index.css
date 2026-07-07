@@ -1656,6 +1656,146 @@ h4 {
   padding: 9px 10px;
 }
 
+/* ---------- Kitten detail gallery ---------- */
+.detail__gallery {
+  position: sticky;
+  top: calc(var(--nav-h) + 20px);
+  display: grid;
+  gap: 14px;
+}
+.detail__gallery .detail__media {
+  position: static;
+}
+.detail__thumbs {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.detail__thumbs button {
+  width: 68px;
+  height: 68px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 2.5px solid transparent;
+  padding: 0;
+  background: none;
+  opacity: 0.75;
+  transition: opacity 0.25s, border-color 0.25s, transform 0.25s;
+}
+.detail__thumbs button:hover {
+  opacity: 1;
+  transform: translateY(-2px);
+}
+.detail__thumbs .detail__thumb--active {
+  border-color: var(--gold);
+  opacity: 1;
+}
+.detail__video {
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+
+/* ---------- Admin media manager ---------- */
+.admin-media {
+  display: grid;
+  gap: 12px;
+}
+.admin-media__label {
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--brown-soft);
+}
+.admin-photo-grid {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.admin-photo-grid__item {
+  position: relative;
+  width: 96px;
+  height: 96px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+.admin-photo-grid__item img,
+.admin-photo-grid__item .catart {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.admin-photo-grid__item--new {
+  outline: 2.5px solid var(--gold);
+  outline-offset: -2.5px;
+}
+.admin-photo-grid__item button {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(30, 22, 12, 0.72);
+  color: #fff;
+  font-size: 1rem;
+  line-height: 1;
+  display: grid;
+  place-items: center;
+}
+.admin-photo-grid__item button:hover {
+  background: #b0483f;
+}
+.admin-photo-grid__add {
+  width: 96px;
+  height: 96px;
+  border-radius: 12px;
+  border: 2px dashed rgba(63, 47, 32, 0.3);
+  background: none;
+  color: var(--brown-soft);
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  transition: border-color 0.25s, color 0.25s;
+}
+.admin-photo-grid__add:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+.admin-media__video {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.admin-media__file {
+  font-size: 0.88rem;
+  color: var(--brown-soft);
+}
+
+.confirm-delete {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap;
+}
+.confirm-delete__yes {
+  background: #b0483f;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 7px 14px;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 600;
+  transition: background 0.25s;
+}
+.confirm-delete__yes:hover {
+  background: #93372f;
+}
+
 .admin-photo-picker {
   display: flex;
   align-items: center;

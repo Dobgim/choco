@@ -1,4 +1,5 @@
 import { useData } from '../context/DataContext.jsx';
+import ConfirmDelete from './ConfirmDelete.jsx';
 
 const STATUSES = ['New', 'Contacted', 'Deposit Paid', 'Completed', 'Cancelled'];
 const fmt = (n) => `$${Number(n || 0).toLocaleString()}`;
@@ -9,10 +10,6 @@ const fmtDate = (iso) =>
 
 export default function AdminOrders() {
   const { orders, updateOrder, deleteOrder } = useData();
-
-  const onDelete = (o) => {
-    if (window.confirm(`Delete order ${o.id}? This cannot be undone.`)) deleteOrder(o.id);
-  };
 
   return (
     <div>
@@ -44,9 +41,7 @@ export default function AdminOrders() {
                     ))}
                   </select>
                 </label>
-                <button className="admin-link admin-link--danger" onClick={() => onDelete(o)}>
-                  Delete
-                </button>
+                <ConfirmDelete onConfirm={() => deleteOrder(o.id)} />
               </div>
             </header>
 

@@ -1,4 +1,5 @@
 import { supabase, VIDEO_BUCKET } from './supabase.js';
+import { putVideoBlob } from './videoStore.js';
 
 // Phone photos are often 5–12 MB; resize/compress in the browser so
 // uploads are fast and pages load quickly.
@@ -53,4 +54,31 @@ export async function uploadImage(file) {
     reader.onerror = () => reject(reader.error);
     reader.readAsDataURL(blob);
   });
+}
+
+/**
+ * Uploads a video and returns metadata in the shape VideoPlayer expects
+ * ({type, url|fileId, ...}). Hosted in Supabase Storage when connected;
+ * stored in IndexedDB in browser-only mode.
+ */
+export async function uploadVideoFile(file, maxMB = 200) {
+  if (!file.type.startsWith('video/')) throw new Error('That file is not a video.');
+  if (file.size > maxMB * 1024 * 1024) {
+    throw new Error(`Video is too large — keep it under ${maxMB} MB.`);
+  }
+
+  if (supabase) {
+    const ext = file.name.split('.').pop()?.toLowerCase() || 'mp4';
+    const path = `kitten-videos/vid-${Date.now().toString(36)}.${ext}`;
+    const { error } = await supabase.storage
+      .from(VIDEO_BUCKET)
+      .upload(path, file, { contentType: file.type });
+    if (error) throw error;
+    const url = supabase.storage.from(VIDEO_BUCKET).getPublicUrl(path).data.publicUrl;
+    return { type: 'url', url, storagePath: path, size: file.size };
+  }
+
+  const fileId = `blob-${Date.now().toString(36)}`;
+  await putVideoBlob(fileId, file);
+  return { type: 'file', fileId, size: file.size };
 }

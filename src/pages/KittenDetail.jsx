@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { CartIcon, CheckIcon } from '../components/icons.jsx';
 import { useCart } from '../context/CartContext.jsx';
@@ -5,6 +6,7 @@ import Page from '../components/Page.jsx';
 import Reveal from '../components/Reveal.jsx';
 import CatArt from '../components/CatArt.jsx';
 import KittenCard from '../components/KittenCard.jsx';
+import VideoPlayer from '../components/VideoPlayer.jsx';
 import { useData } from '../context/DataContext.jsx';
 
 export default function KittenDetail() {
@@ -13,6 +15,11 @@ export default function KittenDetail() {
   const kitten = kittens.find((k) => k.id === id);
   const { add, inCart } = useCart();
   const navigate = useNavigate();
+  const [activePhoto, setActivePhoto] = useState(0);
+
+  useEffect(() => {
+    setActivePhoto(0);
+  }, [id]);
 
   if (!kitten) {
     return (
@@ -31,6 +38,8 @@ export default function KittenDetail() {
   }
 
   const others = kittens.filter((k) => k.id !== kitten.id && k.status === 'Available').slice(0, 3);
+  const photos = kitten.photos?.length ? kitten.photos : [kitten.img];
+  const shownPhoto = photos[Math.min(activePhoto, photos.length - 1)];
 
   return (
     <Page title={kitten.name}>
@@ -38,8 +47,30 @@ export default function KittenDetail() {
         <div className="container">
           <div className="detail">
             <Reveal>
-              <div className="detail__media">
-                <CatArt img={kitten.img} palette={kitten.palette} label={`${kitten.name}, ${kitten.color} Maine Coon kitten`} />
+              <div className="detail__gallery">
+                <div className="detail__media">
+                  <CatArt img={shownPhoto} palette={kitten.palette} label={`${kitten.name}, ${kitten.color} Maine Coon kitten`} />
+                </div>
+                {photos.length > 1 && (
+                  <div className="detail__thumbs" role="tablist" aria-label={`Photos of ${kitten.name}`}>
+                    {photos.map((p, i) => (
+                      <button
+                        key={`${p}-${i}`}
+                        type="button"
+                        className={i === activePhoto ? 'detail__thumb--active' : ''}
+                        onClick={() => setActivePhoto(i)}
+                        aria-label={`Photo ${i + 1} of ${photos.length}`}
+                      >
+                        <CatArt img={p} label="" />
+                      </button>
+                    ))}
+                  </div>
+                )}
+                {kitten.video && (
+                  <div className="detail__video">
+                    <VideoPlayer video={{ title: `${kitten.name} — video`, ...kitten.video }} />
+                  </div>
+                )}
               </div>
             </Reveal>
             <Reveal delay={0.12}>
