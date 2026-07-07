@@ -1,45 +1,79 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import CatArt from '../components/CatArt.jsx';
+import { uploadImage } from '../lib/imageUpload.js';
 import { useData } from '../context/DataContext.jsx';
-
-const photoOptions = [
-  'silver.jpg', 'tabby-cujo.jpg', 'white.jpg', 'atticus.jpg', 'bluesmoke.jpg',
-  'redkitten.jpg', 'karin.jpg', 'balder.jpg', 'fig.jpg', 'hero.jpg',
-  'classic.jpg', 'mitts.jpg', 'home.jpg', 'kittens-group.jpg', 'kittens-mixed.jpg',
-  'kitten-blue.jpg', 'meowing.jpg', 'profile.jpg', 'young.jpg', 'garfield.jpg',
-];
 
 const emptyForm = {
   name: '', sex: 'Female', color: '', age: '', price: 2500, status: 'Available',
-  img: photoOptions[0], temperament: '', parents: '', ready: 'Ready to go home at 12 weeks',
+  img: 'hero.jpg', temperament: '', parents: '', ready: 'Ready to go home at 12 weeks',
 };
 
 export default function AdminKittens() {
   const { kittens, addKitten, updateKitten, deleteKitten } = useData();
   const [editingId, setEditingId] = useState(null); // null = closed, 'new' = adding
   const [form, setForm] = useState(emptyForm);
-  const [customUrl, setCustomUrl] = useState('');
+  const [photoFile, setPhotoFile] = useState(null);
+  const [photoPreview, setPhotoPreview] = useState(null);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState('');
+  const fileRef = useRef(null);
 
+  useEffect(() => {
+    // Free the temporary preview URL when it's replaced or unmounted.
+    return () => {
+      if (photoPreview) URL.revokeObjectURL(photoPreview);
+    };
+  }, [photoPreview]);
+
+  const resetPhoto = () => {
+    setPhotoFile(null);
+    setPhotoPreview(null);
+    if (fileRef.current) fileRef.current.value = '';
+  };
   const openNew = () => {
     setForm(emptyForm);
-    setCustomUrl('');
+    resetPhoto();
+    setError('');
     setEditingId('new');
   };
   const openEdit = (k) => {
     setForm({ ...emptyForm, ...k });
-    setCustomUrl(/^https?:\/\//.test(k.img) ? k.img : '');
+    resetPhoto();
+    setError('');
     setEditingId(k.id);
   };
-  const close = () => setEditingId(null);
+  const close = () => {
+    resetPhoto();
+    setEditingId(null);
+  };
   const set = (key) => (e) => setForm((f) => ({ ...f, [key]: e.target.value }));
 
-  const onSubmit = (e) => {
+  const onPickPhoto = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setPhotoFile(file);
+    setPhotoPreview(URL.createObjectURL(file));
+    setError('');
+  };
+
+  const onSubmit = async (e) => {
     e.preventDefault();
-    const img = customUrl.trim() || form.img;
-    const payload = { ...form, img, price: Number(form.price) || 0 };
-    if (editingId === 'new') addKitten(payload);
-    else updateKitten(editingId, payload);
-    close();
+    setError('');
+    try {
+      let img = form.img;
+      if (photoFile) {
+        setBusy(true);
+        img = await uploadImage(photoFile);
+      }
+      const payload = { ...form, img, price: Number(form.price) || 0 };
+      if (editingId === 'new') addKitten(payload);
+      else updateKitten(editingId, payload);
+      close();
+    } catch (err) {
+      setError(`Photo upload failed: ${err?.message || 'unknown error'}`);
+    } finally {
+      setBusy(false);
+    }
   };
 
   const onDelete = (k) => {
@@ -92,23 +126,6 @@ export default function AdminKittens() {
               </select>
             </label>
             <label>
-              Photo
-              <select value={form.img} onChange={set('img')} disabled={!!customUrl.trim()}>
-                {photoOptions.map((p) => (
-                  <option key={p} value={p}>{p}</option>
-                ))}
-              </select>
-            </label>
-            <label>
-              Or photo URL (overrides)
-              <input
-                value={customUrl}
-                onChange={(e) => setCustomUrl(e.target.value)}
-                placeholder="https://…"
-                type="url"
-              />
-            </label>
-            <label>
               Parents
               <input value={form.parents} onChange={set('parents')} placeholder="Sire × Dam" />
             </label>
@@ -121,17 +138,52 @@ export default function AdminKittens() {
             Temperament / description
             <textarea value={form.temperament} onChange={set('temperament')} rows="3" />
           </label>
-          <div className="admin-form__preview">
-            <span>Photo preview:</span>
-            <div className="admin-form__thumb">
-              <CatArt img={customUrl.trim() || form.img} label="Preview" />
+          {error && <p className="admin-login__error" role="alert">{error}</p>}
+          <div className="admin-form__preview admin-photo-picker">
+            <div className="admin-form__thumb admin-photo-picker__thumb">
+              {photoPreview ? (
+                <img src={photoPreview} alt="New photo preview" />
+              ) : (
+                <CatArt img={form.img} label="Current photo" />
+              )}
+            </div>
+            <div className="admin-photo-picker__controls">
+              <span>{photoPreview ? 'New photo selected' : editingId === 'new' ? 'Add a photo' : 'Current photo'}</span>
+              <input
+                ref={fileRef}
+                id="kitten-photo-input"
+                type="file"
+                accept="image/*"
+                onChange={onPickPhoto}
+                hidden
+              />
+              <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+                <button
+                  type="button"
+                  className="btn btn--outline"
+                  style={{ padding: '10px 20px', fontSize: '0.76rem' }}
+                  onClick={() => fileRef.current?.click()}
+                >
+                  {photoPreview ? 'Choose a Different Photo' : 'Upload Photo'}
+                </button>
+                {photoPreview && (
+                  <button
+                    type="button"
+                    className="btn btn--outline"
+                    style={{ padding: '10px 20px', fontSize: '0.76rem' }}
+                    onClick={resetPhoto}
+                  >
+                    Keep Previous Photo
+                  </button>
+                )}
+              </div>
             </div>
           </div>
           <div style={{ display: 'flex', gap: 12 }}>
-            <button type="submit" className="btn btn--gold">
-              {editingId === 'new' ? 'Add Kitten' : 'Save Changes'}
+            <button type="submit" className="btn btn--gold" disabled={busy}>
+              {busy ? 'Uploading photo…' : editingId === 'new' ? 'Add Kitten' : 'Save Changes'}
             </button>
-            <button type="button" className="btn btn--outline" onClick={close}>
+            <button type="button" className="btn btn--outline" onClick={close} disabled={busy}>
               Cancel
             </button>
           </div>

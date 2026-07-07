@@ -1656,6 +1656,37 @@ h4 {
   padding: 9px 10px;
 }
 
+.admin-photo-picker {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.admin-photo-picker__thumb {
+  width: 130px;
+  height: 130px;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  flex: none;
+}
+.admin-photo-picker__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.admin-photo-picker__controls {
+  display: grid;
+  gap: 10px;
+}
+.admin-photo-picker__controls > span {
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--brown-soft);
+}
+
 /* ---------- Admin ---------- */
 .admin-login {
   min-height: 100vh;
