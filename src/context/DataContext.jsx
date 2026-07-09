@@ -12,6 +12,7 @@ const TABLES = ['kittens', 'orders', 'inquiries', 'videos'];
    affected table so every open browser stays in sync. */
 function SupabaseData({ children }) {
   const [state, setState] = useState({ kittens: [], orders: [], inquiries: [], videos: [] });
+  const [dbError, setDbError] = useState(null);
 
   const fetchTable = useCallback(async (table) => {
     if (!TABLES.includes(table)) return;
@@ -21,8 +22,10 @@ function SupabaseData({ children }) {
       .order('created_at', { ascending: table === 'kittens' });
     if (error) {
       console.error(`Supabase fetch ${table}:`, error.message);
+      setDbError(`Fetch table '${table}' failed: ${error.message}`);
       return;
     }
+    setDbError(null);
     setState((s) => ({ ...s, [table]: data.map((r) => ({ id: r.id, ...r.data })) }));
   }, []);
 
@@ -62,7 +65,12 @@ function SupabaseData({ children }) {
         .from(table)
         .insert({ id, data })
         .then(({ error }) => {
-          if (error) console.error(`Supabase insert ${table}:`, error.message);
+          if (error) {
+            console.error(`Supabase insert ${table}:`, error.message);
+            setDbError(`Insert into '${table}' failed: ${error.message}`);
+          } else {
+            setDbError(null);
+          }
           fetchTable(table);
         });
     };
@@ -77,7 +85,12 @@ function SupabaseData({ children }) {
         .update({ data })
         .eq('id', id)
         .then(({ error }) => {
-          if (error) console.error(`Supabase update ${table}:`, error.message);
+          if (error) {
+            console.error(`Supabase update ${table}:`, error.message);
+            setDbError(`Update of '${table}' failed: ${error.message}`);
+          } else {
+            setDbError(null);
+          }
         });
     };
 
@@ -88,13 +101,19 @@ function SupabaseData({ children }) {
         .delete()
         .eq('id', id)
         .then(({ error }) => {
-          if (error) console.error(`Supabase delete ${table}:`, error.message);
+          if (error) {
+            console.error(`Supabase delete ${table}:`, error.message);
+            setDbError(`Delete from '${table}' failed: ${error.message}`);
+          } else {
+            setDbError(null);
+          }
         });
     };
 
     return {
       ...state,
       backend: 'supabase',
+      dbError,
 
       addKitten: (k) => {
         const id = `${k.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${Date.now().toString(36)}`;
@@ -169,6 +188,7 @@ function LocalData({ children }) {
       inquiries,
       videos,
       backend: 'local',
+      dbError: null,
 
       addKitten: (k) => {
         const id = `${k.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${Date.now().toString(36)}`;

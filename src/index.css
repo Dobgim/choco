@@ -1,4 +1,4 @@
-﻿/* ============================================================
+/* ============================================================
    Cozy Paws Cattery Maine Coon — Design System
    ============================================================ */
 :root {
@@ -1999,6 +1999,51 @@ h4 {
 .admin__logout:hover {
   border-color: var(--gold-soft);
   color: var(--gold-soft);
+}
+.admin-banner {
+  padding: 18px 22px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  box-shadow: var(--shadow-sm);
+}
+.admin-banner--warning {
+  background: #fff9ee;
+  border: 1.5px solid #ffd899;
+  color: #7a5310;
+}
+.admin-banner--error {
+  background: #fdf3f2;
+  border: 1.5px solid #f8c0c4;
+  color: #a4433a;
+}
+.admin-banner h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0 0 4px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: inherit;
+  font-family: var(--font-body);
+}
+.admin-banner ul {
+  margin-left: 24px;
+  margin-top: 4px;
+}
+.admin-banner li {
+  margin-bottom: 4px;
+}
+.admin-banner code {
+  background: rgba(0,0,0,0.06);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: monospace;
+  font-weight: 500;
 }
 
 .admin__main {

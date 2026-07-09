@@ -6,7 +6,7 @@ import { useData } from '../context/DataContext.jsx';
 
 export default function AdminLayout() {
   const { authed, logout } = useAuth();
-  const { orders, inquiries } = useData();
+  const { orders, inquiries, backend, dbError } = useData();
 
   useEffect(() => {
     document.title = 'Admin Dashboard | Cozy Paws Cattery Maine Coon';
@@ -56,6 +56,37 @@ export default function AdminLayout() {
         </div>
       </aside>
       <main className="admin__main">
+        {backend === 'local' && (
+          <div className="admin-banner admin-banner--warning" role="alert">
+            <h3>⚠️ Running in Offline (Local Storage) Mode</h3>
+            <p>
+              Supabase environment variables are missing from this build environment. Any listings, orders, or inquiries you add will only be stored in this browser's <code>localStorage</code>. They <strong>will not</strong> be saved to Supabase and will not be visible on other devices.
+            </p>
+            <p><strong>To fix this on your live website:</strong></p>
+            <ul>
+              <li>Log in to your <strong>Vercel Dashboard</strong>.</li>
+              <li>Go to <strong>Settings &rarr; Environment Variables</strong> in your project.</li>
+              <li>Add <code>VITE_SUPABASE_URL</code> and <code>VITE_SUPABASE_ANON_KEY</code>.</li>
+              <li>Trigger a new deployment/rebuild for the changes to take effect.</li>
+            </ul>
+          </div>
+        )}
+
+        {backend === 'supabase' && dbError && (
+          <div className="admin-banner admin-banner--error" role="alert">
+            <h3>❌ Database Connection Error</h3>
+            <p>
+              The application is configured to connect to Supabase, but encountered an error:
+            </p>
+            <p>
+              <code>{dbError}</code>
+            </p>
+            <p>
+              Please check your Supabase dashboard status, database schema, and credentials.
+            </p>
+          </div>
+        )}
+
         <Outlet />
       </main>
     </div>
